@@ -32,7 +32,9 @@ import wave
 import numpy as np
 import pytest
 
-_REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# The app runs on the recamera_pro kit/appmgr; point at that checkout.
+_REPO = os.path.abspath(os.environ.get(
+    "RECAMERA_PRO_REPO", os.path.expanduser("~/project/recamera/recamera_pro")))
 for _path in (_REPO, os.path.join(_REPO, "market")):
     if _path not in sys.path:
         sys.path.insert(0, _path)
@@ -42,7 +44,7 @@ from kit.asr import AsrResult                                         # noqa: E4
 from kit.audio_claim import ENV_LOCK_PATH, ExclusiveAudioClaim        # noqa: E402
 from kit.errors import ResourceBusyError                              # noqa: E402
 
-APP_DIR = os.path.join(_REPO, "apps", "eldercare-monitor")
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
 _APP_PY = os.path.join(APP_DIR, "app.py")
 
 with open(os.path.join(APP_DIR, "manifest.json")) as _handle:
@@ -150,6 +152,16 @@ class _Vad:
 
     def flush(self):
         pass
+
+
+class _T172Backend:
+    """Stand-in for `asr_t172.T172SenseVoiceBackend`; records its arguments."""
+
+    instances: list = []
+
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+        _T172Backend.instances.append(self)
 
 
 class _Asr:
@@ -290,6 +302,16 @@ class _Harness:
         self._restore.append((asr_module, "Asr", asr_module.Asr))
         asr_module.Asr = _Asr
         _Asr.instances = []
+        # The RK branch builds the T172 helper first (`from asr_t172 import
+        # ...` at call time); it requires managed inference and real model
+        # files, so it is replaced like Asr.
+        if APP_DIR not in sys.path:
+            sys.path.insert(0, APP_DIR)
+        import asr_t172 as t172_module
+        self._restore.append((t172_module, "T172SenseVoiceBackend",
+                              t172_module.T172SenseVoiceBackend))
+        t172_module.T172SenseVoiceBackend = _T172Backend
+        _T172Backend.instances = []
 
         self.monkeypatch.setenv(
             "RECAMERA_VOICE_WAV",
