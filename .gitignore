@@ -1,0 +1,8 @@
+# Model weights and wheels are payload, not source: see MODELS.md and scripts/build.sh.
+app/models/
+app/wheels/
+dist/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
