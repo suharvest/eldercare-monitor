@@ -395,6 +395,22 @@ class EldercareMonitorApp(App):
                 code="invalid_asr_backend",
             )
         asr_dir = self._resolve_asr_dir()
+        if backend == "rk":
+            from asr_t172 import T172SenseVoiceBackend
+            model = os.path.join(
+                asr_dir, "sensevoice_rv1126b_t172_scaled_hybrid.rknn")
+            backend_instance = T172SenseVoiceBackend(
+                model=model,
+                cmvn=os.path.join(asr_dir, "am.mvn"),
+                embedding=os.path.join(asr_dir, "embedding.npy"),
+                bpe=os.path.join(
+                    asr_dir, "chn_jpn_yue_eng_ko_spectok.bpe.model"),
+                language=self.language,
+            )
+            return Asr(model=model, tokens=os.path.join(
+                asr_dir, "chn_jpn_yue_eng_ko_spectok.bpe.model"),
+                language=self.language, backend="rk",
+                rknn_backend=backend_instance)
         return Asr(model=os.path.join(asr_dir, "model.int8.onnx"),
                    tokens=os.path.join(asr_dir, "tokens.txt"),
                    language=self.language, backend=backend)

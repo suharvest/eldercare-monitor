@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "release": {
-    "sequence": 5,
+    "sequence": 10,
     "channel": "stable"
   },
   "compatibility": {
@@ -108,24 +108,13 @@
       "share_scope": "content"
     },
     {
-      "id": "sensevoice-rknn",
+      "id": "sensevoice-rknn-t172-scaled-hybrid",
       "kind": "rknn",
       "source": "bundled",
-      "file": "models/asr/sensevoice_rv1126b_w4a16.rknn",
-      "sha256": "3fa40ad9ab011f5f4134a355b0104c979d272450a0ff3c17ec34cba97f4f1c12",
-      "size": 133468923,
-      "mount": "models/asr/sensevoice_rv1126b_w4a16.rknn",
-      "required": true,
-      "share_scope": "content"
-    },
-    {
-      "id": "sensevoice-rknn-t100",
-      "kind": "rknn",
-      "source": "bundled",
-      "file": "models/asr/sensevoice_rv1126b_w4a16_t100.rknn",
-      "sha256": "0a2e450c432cc064da5518f0cac5c4a44bb2e728f45ab5370efb761b6126bc48",
-      "size": 132339323,
-      "mount": "models/asr/sensevoice_rv1126b_w4a16_t100.rknn",
+      "file": "models/asr/sensevoice_rv1126b_t172_scaled_hybrid.rknn",
+      "sha256": "4f73132adf3235ed32152617df16c69d8581db5f1bf1d71278302bf6e2d015fb",
+      "size": 246399355,
+      "mount": "models/asr/sensevoice_rv1126b_t172_scaled_hybrid.rknn",
       "required": true,
       "share_scope": "content"
     },
@@ -250,7 +239,7 @@
   "id": "eldercare-monitor",
   "name": "Elder Care Monitor",
   "name_zh": "居家养老监控",
-  "version": "0.1.0",
+  "version": "0.1.5",
   "image": "/appcenter/apps/eldercare-monitor.png",
   "icon": {
     "path": "icon.png",
